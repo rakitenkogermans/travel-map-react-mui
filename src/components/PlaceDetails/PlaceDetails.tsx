@@ -1,10 +1,12 @@
-import React from 'react';
-
-const PlaceDetails = () => {
+import React, {FC} from 'react';
+interface PlaceDetailsProps {
+    place: any
+}
+const PlaceDetails: FC<PlaceDetailsProps> = ({ place }) => {
     return (
-        <div>
-            p
-        </div>
+        <h1>
+            {place.name}
+        </h1>
     );
 };
 

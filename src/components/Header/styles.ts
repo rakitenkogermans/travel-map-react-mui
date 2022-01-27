@@ -1,7 +1,6 @@
 import {makeStyles} from "@mui/styles";
 import {alpha} from "@mui/material/styles";
 
-// let useStyles;
 export default makeStyles((theme: any) => ({
     title: {
         display: 'none',

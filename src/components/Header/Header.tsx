@@ -47,9 +47,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Header = () => {
     const classes = useStyles();
-    console.log(classes);
+
     return (
-        <AppBar position="fixed">
+        <AppBar position="static">
             <Toolbar className={classes.toolbar}>
                 <Typography variant="h5" className={classes.title}>
                     Travel Map
