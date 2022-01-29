@@ -1,4 +1,4 @@
-export interface IPlaces {
+export interface IPlace {
     location_id:                               string;
     name:                                      string;
     latitude:                                  string;
