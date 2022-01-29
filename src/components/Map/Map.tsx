@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {useMediaQuery} from "@mui/material";
-import useStyles from "../Map/styles";
+import useStyles from "./styles";
 import GoogleMapReact from 'google-map-react';
 import {IBounds, ICoordinates} from "../../interfaces/Places";
 
