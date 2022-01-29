@@ -5,10 +5,10 @@ import Map from "./components/Map/Map";
 import List from "./components/List/List";
 import {ThemeProvider} from "@mui/styles";
 import {getPlacesData} from "./api";
-import {IBounds, ICoordinates, IPlaces} from "./interfaces/Places";
+import {IBounds, ICoordinates, IPlace} from "./interfaces/Places";
 
 const App = () => {
-    const [places, setPlaces] = useState<IPlaces[]>([]);
+    const [places, setPlaces] = useState<IPlace[]>([]);
     const [coordinates, setCoordinates] = useState<ICoordinates>({ lat: 0, lng: 0});
     const [bounds, setBounds] = useState<IBounds | null>(null);
     const theme = createTheme();
@@ -22,9 +22,9 @@ const App = () => {
     useEffect(() => {
         const fetchPlaces = async () => {
             if (bounds) {
-                const response: IPlaces[] = await getPlacesData(bounds?.sw, bounds?.ne);
-                console.log(JSON.stringify(response[0]));
-                console.log(response);
+                const response: IPlace[] = await getPlacesData(bounds?.sw, bounds?.ne);
+                // console.log(JSON.stringify(response[0]));
+                // console.log(response);
                 setPlaces(response);
             }
         }
@@ -37,7 +37,7 @@ const App = () => {
                 <Header />
                 <Grid container spacing={3} style={{width: '100%'}}>
                     <Grid item xs={12} md={4}>
-                        <List />
+                        <List places={places}/>
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <Map
