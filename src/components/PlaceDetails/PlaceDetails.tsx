@@ -4,13 +4,22 @@ import useStyles from "./styles";
 import {Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Typography} from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
+import Rating from '@mui/material/Rating';
 
 interface PlaceDetailsProps {
-    place: IPlace
+    place: IPlace;
+    selected: boolean | null;
+    refProp: any;
 }
 
-const PlaceDetails: FC<PlaceDetailsProps> = ({ place }) => {
+const PlaceDetails: FC<PlaceDetailsProps> = ({ place, selected, refProp }) => {
+    if (selected) refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     const classes = useStyles();
+    console.log(selected);
+    // if(selected) {
+    //     console.log('is selected', selected);
+    //     refProp?.current?.scrollIntoView({behavior: "smooth", block: "start"})
+    // }
 
     return (
         <Card elevation={6}>
@@ -24,6 +33,10 @@ const PlaceDetails: FC<PlaceDetailsProps> = ({ place }) => {
                     {place.name}
                 </Typography>
                 <Box display="flex" justifyContent="space-between">
+                    <Rating value={+place.rating} readOnly />
+                    <Typography gutterBottom variant="subtitle1">Out of {place.num_reviews} reviews</Typography>
+                </Box>
+                <Box display="flex" justifyContent="space-between">
                     <Typography variant="subtitle1">Price</Typography>
                     <Typography gutterBottom variant="subtitle1">{place.price_level}</Typography>
                 </Box>
@@ -31,8 +44,8 @@ const PlaceDetails: FC<PlaceDetailsProps> = ({ place }) => {
                     <Typography variant="subtitle1">Ranking</Typography>
                     <Typography gutterBottom variant="subtitle1">{place.ranking}</Typography>
                 </Box>
-                {place?.awards?.map((award: Award) => (
-                    <Box my={1} display="flex" justifyContent="space-between" alignItems="center">
+                {place?.awards?.map((award: Award, i: number) => (
+                    <Box key={i} my={1} display="flex" justifyContent="space-between" alignItems="center">
                         <img src={award.images.small} alt={award.display_name}/>
                         <Typography variant="subtitle2" color="textSecondary">{award.display_name}</Typography>
                     </Box>
