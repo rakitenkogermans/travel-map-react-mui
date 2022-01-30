@@ -11,6 +11,8 @@ const App = () => {
     const [places, setPlaces] = useState<IPlace[]>([]);
     const [coordinates, setCoordinates] = useState<ICoordinates>({ lat: 0, lng: 0});
     const [bounds, setBounds] = useState<IBounds | null>(null);
+    const [childClicked, setChildClicked] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const theme = createTheme();
 
     useEffect(() => {
@@ -22,10 +24,12 @@ const App = () => {
     useEffect(() => {
         const fetchPlaces = async () => {
             if (bounds) {
+                setIsLoading(true);
                 const response: IPlace[] = await getPlacesData(bounds?.sw, bounds?.ne);
                 // console.log(JSON.stringify(response[0]));
                 // console.log(response);
                 setPlaces(response);
+                setIsLoading(false);
             }
         }
         fetchPlaces();
@@ -37,13 +41,19 @@ const App = () => {
                 <Header />
                 <Grid container spacing={3} style={{width: '100%'}}>
                     <Grid item xs={12} md={4}>
-                        <List places={places}/>
+                        <List
+                            places={places}
+                            childClicked={childClicked}
+                            isLoading={isLoading}
+                        />
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <Map
                             setCoordinates={setCoordinates}
                             setBounds={setBounds}
                             coordinates={coordinates}
+                            places={places}
+                            setChildClicked={setChildClicked}
                         />
                     </Grid>
                 </Grid>
