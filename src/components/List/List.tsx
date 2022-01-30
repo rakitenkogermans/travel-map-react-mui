@@ -68,7 +68,7 @@ const List: FC<ListProps> = ({ places, childClicked, isLoading }) => {
                         </Box>
                         <Grid container spacing={3} className={classes.list}>
                             {places?.map((place: IPlace, i: number) => (
-                                <Grid item key={i} xs={12} sx={{mb: 3}}>
+                                <Grid ref={elRefs[i]} item key={i} xs={12} sx={{mb: 3}}>
                                     <PlaceDetails
                                         place={place}
                                         selected={Number(childClicked) === i}
