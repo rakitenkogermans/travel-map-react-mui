@@ -4,14 +4,36 @@ import Header from "./components/Header/Header";
 import Map from "./components/Map/Map";
 import List from "./components/List/List";
 import {ThemeProvider} from "@mui/styles";
-import {getPlacesData} from "./api";
+import {getPlacesData, getWeatherData} from "./api";
 import {IBounds, ICoordinates, IPlace} from "./interfaces/Places";
+
+export enum Type {
+    RESTAURANTS = 'restaurants',
+    HOTELS = 'hotels',
+    ATTRACTIONS = 'attractions'
+}
+
+export enum Rating {
+    ZERO = '0',
+    THREE = '3',
+    FOUR = '4',
+    FOURHALF = '4.5'
+}
 
 const App = () => {
     const [places, setPlaces] = useState<IPlace[]>([]);
+    const [filteredPlaces, setFilteredPlaces] = useState<IPlace[]>([]);
+
+    const [weatherData, setWeatherData] = useState<any[]>([]);
+
     const [coordinates, setCoordinates] = useState<ICoordinates>({ lat: 0, lng: 0});
     const [bounds, setBounds] = useState<IBounds | null>(null);
+
     const [childClicked, setChildClicked] = useState<string | null>(null);
+
+    const [type, setType] = useState<Type>(Type.RESTAURANTS);
+    const [rating, setRating] = useState<Rating>(Rating.ZERO);
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const theme = createTheme();
 
@@ -23,28 +45,41 @@ const App = () => {
 
     useEffect(() => {
         const fetchPlaces = async () => {
-            if (bounds) {
+            if (bounds?.sw && bounds?.ne) {
                 setIsLoading(true);
-                const response: IPlace[] = await getPlacesData(bounds?.sw, bounds?.ne);
-                // console.log(JSON.stringify(response[0]));
-                // console.log(response);
-                setPlaces(response);
+                console.log(type);
+                const placesRes: IPlace[] = await getPlacesData(type, bounds?.sw, bounds?.ne);
+                const weatherRes: any = await getWeatherData(coordinates.lat, coordinates.lng);
+                setWeatherData(weatherRes);
+                console.log(weatherRes);
+                setPlaces(placesRes?.filter((place: IPlace) => place.name && +place.num_reviews > 0));
+                setFilteredPlaces([]);
                 setIsLoading(false);
             }
         }
         fetchPlaces();
-    }, [coordinates, bounds])
+    }, [type, bounds]);
+
+    useEffect(() => {
+        const filteredPlaces = places.filter((place: IPlace) => +place.rating > +rating);
+        setFilteredPlaces(filteredPlaces);
+    }, [rating]);
+
     return (
         <>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <Header />
+                <Header setCoordinates={setCoordinates} />
                 <Grid container spacing={3} style={{width: '100%'}}>
                     <Grid item xs={12} md={4}>
                         <List
-                            places={places}
+                            places={filteredPlaces.length ? filteredPlaces : places}
                             childClicked={childClicked}
                             isLoading={isLoading}
+                            type={type}
+                            setType={setType}
+                            rating={rating}
+                            setRating={setRating}
                         />
                     </Grid>
                     <Grid item xs={12} md={8}>
@@ -52,8 +87,9 @@ const App = () => {
                             setCoordinates={setCoordinates}
                             setBounds={setBounds}
                             coordinates={coordinates}
-                            places={places}
+                            places={filteredPlaces.length ? filteredPlaces : places}
                             setChildClicked={setChildClicked}
+                            weatherData={weatherData}
                         />
                     </Grid>
                 </Grid>

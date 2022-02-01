@@ -12,18 +12,21 @@ import {
     useMediaQuery
 } from "@mui/material";
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
-import {IPlace} from "../../interfaces/Places";
+import {IBounds, IPlace} from "../../interfaces/Places";
+import {Rating, Type} from "../../App";
 
 export interface ListProps {
     places: IPlace[];
     childClicked: string | null;
     isLoading: boolean;
+    type: Type;
+    setType: (value: Type | ((prevVar: Type) => Type)) => void;
+    rating: Rating;
+    setRating: (value: Rating | ((prevVar: Rating) => Rating)) => void;
 }
 
-const List: FC<ListProps> = ({ places, childClicked, isLoading }) => {
+const List: FC<ListProps> = ({ places, childClicked, isLoading , type, setType, rating, setRating}) => {
     const classes = useStyles();
-    const [type, setType] = useState<'restaurants' | 'hotels' | 'attractions'>('restaurants');
-    const [rating, setRating] = useState<'0' | '3' | '4' | '4.5'>('0');
     const [elRefs, setElRefs] = useState<any[]>([]);
 
     useEffect(() => {
@@ -31,11 +34,11 @@ const List: FC<ListProps> = ({ places, childClicked, isLoading }) => {
     }, [places]);
 
     const typeHandler = (event: SelectChangeEvent) => {
-        setType(event.target.value as 'restaurants' | 'hotels' | 'attractions');
+        setType(event.target.value as Type);
     };
 
     const ratingHandler = (event: SelectChangeEvent) => {
-        setRating(event.target.value as '0' | '3' | '4' | '4.5');
+        setRating(event.target.value as Rating);
     };
 
     return (
@@ -45,7 +48,7 @@ const List: FC<ListProps> = ({ places, childClicked, isLoading }) => {
                     <div className={classes.loading}>
                         <CircularProgress size="5rem" />
                     </div>
-                ): (
+                ) : (
                     <>
                         <Box sx={{mb: 3}}>
                             <FormControl className={`${classes.formControl} ${classes.marginBottom}`} sx={{m: 1, minWidth: 140}}>

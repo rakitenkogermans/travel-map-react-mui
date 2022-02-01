@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {FC, useState} from 'react';
 import {AppBar, Box, InputBase, Toolbar, Typography} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import {Autocomplete} from "@react-google-maps/api";
 import SearchIcon from '@mui/icons-material/Search';
 import useStyles from "./styles"
+import {IBounds, ICoordinates, IPlace} from "../../interfaces/Places";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -45,8 +46,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const Header = () => {
+export interface HeaderProps {
+    setCoordinates: (value: ICoordinates | ((prevVar: ICoordinates ) => ICoordinates)) => void;
+}
+
+const Header: FC<HeaderProps> = ({ setCoordinates }) => {
     const classes = useStyles();
+    const [autocomplete, setAutocomplete] = useState<any>(null);
+
+    const loadHandler = (autoComplete: any) => {
+        setAutocomplete(autoComplete);
+    }
+
+    const placeChangedHandler = () => {
+        const lat = autocomplete?.getPlace().geometry.location.lat();
+        const lng = autocomplete?.getPlace().geometry.location.lng();
+
+        setCoordinates({lat, lng});
+    }
 
     return (
         <AppBar position="static">
@@ -58,7 +75,7 @@ const Header = () => {
                     <Typography variant="h6" className={classes.title}>
                         Find new places
                     </Typography>
-                    {/*<Autocomplete>*/}
+                    <Autocomplete onLoad={loadHandler} onPlaceChanged={placeChangedHandler}>
                         <Search>
                             <SearchIconWrapper>
                                 <SearchIcon />
@@ -68,7 +85,7 @@ const Header = () => {
                                 inputProps={{ 'aria-label': 'search' }}
                             />
                         </Search>
-                    {/*</Autocomplete>*/}
+                    </Autocomplete>
                 </Box>
             </Toolbar>
         </AppBar>
