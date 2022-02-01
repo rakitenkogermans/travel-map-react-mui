@@ -16,10 +16,6 @@ const PlaceDetails: FC<PlaceDetailsProps> = ({ place, selected, refProp }) => {
     if (selected) refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     const classes = useStyles();
     console.log(selected);
-    // if(selected) {
-    //     console.log('is selected', selected);
-    //     refProp?.current?.scrollIntoView({behavior: "smooth", block: "start"})
-    // }
 
     return (
         <Card elevation={6}>
