@@ -6,6 +6,7 @@ import List from "./components/List/List";
 import {ThemeProvider} from "@mui/styles";
 import {getPlacesData, getWeatherData} from "./api";
 import {IBounds, ICoordinates, IPlace} from "./interfaces/Places";
+import {Weather, IList} from "./interfaces/Weather";
 
 export enum Type {
     RESTAURANTS = 'restaurants',
@@ -24,7 +25,7 @@ const App = () => {
     const [places, setPlaces] = useState<IPlace[]>([]);
     const [filteredPlaces, setFilteredPlaces] = useState<IPlace[]>([]);
 
-    const [weatherData, setWeatherData] = useState<any[]>([]);
+    const [weatherData, setWeatherData] = useState<IList[]>([]);
 
     const [coordinates, setCoordinates] = useState<ICoordinates>({ lat: 0, lng: 0});
     const [bounds, setBounds] = useState<IBounds | null>(null);
@@ -47,11 +48,9 @@ const App = () => {
         const fetchPlaces = async () => {
             if (bounds?.sw && bounds?.ne) {
                 setIsLoading(true);
-                console.log(type);
                 const placesRes: IPlace[] = await getPlacesData(type, bounds?.sw, bounds?.ne);
-                const weatherRes: any = await getWeatherData(coordinates.lat, coordinates.lng);
-                setWeatherData(weatherRes);
-                console.log(weatherRes);
+                const weatherRes: Weather = await getWeatherData(coordinates.lat, coordinates.lng);
+                setWeatherData(weatherRes.list);
                 setPlaces(placesRes?.filter((place: IPlace) => place.name && +place.num_reviews > 0));
                 setFilteredPlaces([]);
                 setIsLoading(false);
