@@ -1,3 +1,15 @@
+# React Travel Map App
+
+* ReactJS
+* Typescript
+* MUI
+* Google Maps
+* Rapid API
+
+<a href="https://react-travel-map.netlify.app/" style="color:#43cea2; font-size: 32px; font-weight: 900;">Hosted on Netlify 🔗
+</a>
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
